@@ -12,12 +12,14 @@ public class PlayerManager : MonoBehaviour
     private Rigidbody2D rbody; // プレイヤー制御用RigidBody2D
     private Animator animator; // アニメーター
 
-    private const float MOVE_SPEED = 6; // 移動速度固定値
-    private float moveSpeed; // 移動速度
-    private float jumpPower = 800; // ジャンプの力
-    private bool goJump = false; // ジャンプしたか否か
-    private bool canJump = false; // ブロックに接地しているか否か
-    private bool usingButtons = false; // ボタンを押しているか否か
+    private const float MOVE_SPEED = 6;     // 移動速度固定値
+    private float moveSpeed;                // 移動速度
+    private float jumpPower = 800;          // ジャンプの力
+    private bool goJump = false;            // ジャンプしたか否か
+    private bool canJump = false;           // ブロックに接地しているか否か
+    private bool usingButtons = false;      // ボタンを押しているか否か
+
+    private bool isInvisible = false;       // 無敵状態
 
     public enum MOVE_DIR
     {
@@ -123,6 +125,26 @@ public class PlayerManager : MonoBehaviour
         if (canJump)
         {
             goJump = true;
+        }
+    }
+
+    // 接触時処理
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Enemy" && !isInvisible)
+        {
+            // ノックバック処理
+            if (transform.position.x > col.gameObject.transform.position.x)
+            {
+                rbody.AddForce(Vector2.right * 800 + Vector2.up * 280);
+            }
+            else
+            {
+                rbody.AddForce(Vector2.right * -800 + Vector2.up * 280);
+            }
+
+            // 無敵状態にする
+            isInvisible = true;
         }
     }
 }

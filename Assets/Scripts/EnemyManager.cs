@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,8 @@ public class EnemyManager : MonoBehaviour
 
     private Rigidbody2D rbody;      // RigidBody2D
 
-    private const float MOVE_SPEED = 3; // 移動速度固定値
-    private float moveSpeed;        // 移動速度
+    private const float MOVE_SPEED = 2; // 移動速度固定値
+    private float moveSpeed;            // 移動速度
 
     public enum MOVE_DIR
     {
@@ -57,11 +58,11 @@ public class EnemyManager : MonoBehaviour
                 break;
             case MOVE_DIR.LEFT:
                 moveSpeed = MOVE_SPEED * -1;
-                transform.localScale = new Vector2(-1, 1);
+                transform.localScale = new Vector2(Math.Abs(transform.localScale.x) * -1, transform.localScale.y);
                 break;
             case MOVE_DIR.RIGHT:
                 moveSpeed = MOVE_SPEED * 1;
-                transform.localScale = new Vector2(1, 1);
+                transform.localScale = new Vector2(Math.Abs(transform.localScale.x), transform.localScale.y);
                 break;
         }
 
