@@ -32,6 +32,7 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ƒvƒŒƒCƒ„[‚É’Ç]‚·‚é‚æ‚¤•ûŒü‚ğŒˆ’è
         if(player.transform.position.x < this.gameObject.transform.position.x)
         {
             moveDirection = MOVE_DIR.LEFT;
