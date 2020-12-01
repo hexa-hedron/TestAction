@@ -145,6 +145,15 @@ public class PlayerManager : MonoBehaviour
 
             // ñ≥ìGèÛë‘Ç…Ç∑ÇÈ
             isInvisible = true;
+
+            StartCoroutine("OffInvisible");
         }
+    }
+
+    private IEnumerator OffInvisible()
+    {
+        yield return new WaitForSeconds(1);
+
+        isInvisible = false;
     }
 }
