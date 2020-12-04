@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class PlayerManager : MonoBehaviour
 
     public LayerMask blockLayer; // ブロックレイヤー
 
+    public Slider hpBar; // HPバー
+
     private Rigidbody2D rbody; // プレイヤー制御用RigidBody2D
     private Animator animator; // アニメーター
 
+    private int MAX_HIT_POINT = 50;
     private const float MOVE_SPEED = 6;     // 移動速度固定値
     private float moveSpeed;                // 移動速度
     private float jumpPower = 800;          // ジャンプの力
@@ -39,6 +43,8 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        hpBar.maxValue = MAX_HIT_POINT;
+        hpBar.value = hitPoint;
     }
 
     // Update is called once per frame
@@ -133,6 +139,10 @@ public class PlayerManager : MonoBehaviour
     {
         if (col.gameObject.tag == "Enemy" && !isInvisible)
         {
+            // 仮のダメージ
+            hitPoint -= 3;
+            hpBar.value = hitPoint;
+
             // ノックバック処理
             if (transform.position.x > col.gameObject.transform.position.x)
             {
