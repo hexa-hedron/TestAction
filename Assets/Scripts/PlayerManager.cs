@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
 
     public Slider hpBar; // HPバー
 
+    private GameObject weapon; // 武器
+
     private Rigidbody2D rbody; // プレイヤー制御用RigidBody2D
     private Animator animator; // アニメーター
 
@@ -42,6 +44,8 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        weapon = transform.Find("Weapon").gameObject;
+        animator = weapon.GetComponent<Animator>();
         rbody = GetComponent<Rigidbody2D>();
         hpBar.maxValue = MAX_HIT_POINT;
         hpBar.value = hitPoint;
@@ -52,31 +56,43 @@ public class PlayerManager : MonoBehaviour
     {
         canJump = Physics2D.Linecast(transform.position - (transform.right * 0.3f) - (transform.up * 0.9f), transform.position - (transform.up * 1.2f), blockLayer) ||
                   Physics2D.Linecast(transform.position + (transform.right * 0.3f) - (transform.up * 0.9f), transform.position - (transform.up * 1.2f), blockLayer);
-
-        if (!usingButtons)
+        if (!isInvisible)
         {
-            float x = Input.GetAxisRaw("Horizontal");
+            if (!usingButtons)
+            {
+                float x = Input.GetAxisRaw("Horizontal");
 
-            if (x == 0)
-            {
-                moveDirection = MOVE_DIR.STOP;
-            }
-            else
-            {
-                if (x < 0)
+                if (x == 0)
                 {
-                    moveDirection = MOVE_DIR.LEFT;
+                    moveDirection = MOVE_DIR.STOP;
                 }
                 else
                 {
-                    moveDirection = MOVE_DIR.RIGHT;
+                    if (x < 0)
+                    {
+                        moveDirection = MOVE_DIR.LEFT;
+                    }
+                    else
+                    {
+                        moveDirection = MOVE_DIR.RIGHT;
+                    }
+                }
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    PushJumpButton();
+                }
+
+                if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    weapon.SetActive(true);
+                    animator.SetTrigger("Once");
                 }
             }
-
-            if (Input.GetKeyDown("space"))
-            {
-                PushJumpButton();
-            }
+        }
+        else
+        {
+            moveDirection = MOVE_DIR.STOP;
         }
     }
 
@@ -99,6 +115,8 @@ public class PlayerManager : MonoBehaviour
         }
 
         rbody.velocity = new Vector2(moveSpeed, rbody.velocity.y);
+
+        hpBar.transform.localScale = new Vector2(transform.localScale.x * -1, 1);
 
         // ジャンプ処理
         if (goJump)
@@ -162,7 +180,7 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator OffInvisible()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
 
         isInvisible = false;
     }
