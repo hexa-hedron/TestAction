@@ -14,6 +14,8 @@ public class EnemyManager : MonoBehaviour
     private const float MOVE_SPEED = 2; // 移動速度固定値
     private float moveSpeed;            // 移動速度
 
+    private bool isInvisible = false;       // 無敵状態
+
     public enum MOVE_DIR
     {
         STOP,
@@ -22,6 +24,9 @@ public class EnemyManager : MonoBehaviour
     };
 
     private MOVE_DIR moveDirection = MOVE_DIR.LEFT; // 移動方向
+
+    private int hitPoint = 10; // HP
+
     #endregion
 
     // Start is called before the first frame update
@@ -67,5 +72,47 @@ public class EnemyManager : MonoBehaviour
         }
 
         rbody.velocity = new Vector2(moveSpeed, rbody.velocity.y);
+    }
+
+    // 接触時処理
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Attack" && !isInvisible)
+        {
+            // 仮のダメージ
+            hitPoint -= 2;
+            //hpBar.value = hitPoint;
+
+            if (hitPoint <= 0)
+            {
+                Destroy(this.gameObject);
+            }
+
+            // ノックバック処理
+            if (player.transform.position.x < this.gameObject.transform.position.x)
+            {
+                rbody.AddForce(Vector2.right * 800 + Vector2.up * 280);
+            }
+            else
+            {
+                rbody.AddForce(Vector2.right * -800 + Vector2.up * 280);
+            }
+        }
+
+        // 無敵状態にする
+        isInvisible = true;
+
+        StartCoroutine("OffInvisible");
+    }
+
+    /// <summary>
+    /// 無敵状態を解除する
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator OffInvisible()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        isInvisible = false;
     }
 }

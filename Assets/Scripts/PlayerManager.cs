@@ -54,8 +54,15 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 攻撃のアニメーション終了時、武器を無効化
+        if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
+        {
+            weapon.SetActive(false);
+        }
+
         canJump = Physics2D.Linecast(transform.position - (transform.right * 0.3f) - (transform.up * 0.9f), transform.position - (transform.up * 1.2f), blockLayer) ||
                   Physics2D.Linecast(transform.position + (transform.right * 0.3f) - (transform.up * 0.9f), transform.position - (transform.up * 1.2f), blockLayer);
+
         if (!isInvisible)
         {
             if (!usingButtons)
@@ -178,6 +185,10 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 無敵状態を解除する
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator OffInvisible()
     {
         yield return new WaitForSeconds(0.5f);
