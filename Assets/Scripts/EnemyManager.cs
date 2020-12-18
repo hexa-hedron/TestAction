@@ -85,7 +85,9 @@ public class EnemyManager : MonoBehaviour
 
             if (hitPoint <= 0)
             {
+                // オブジェクトを消し、敵のカウントを減らす
                 Destroy(this.gameObject);
+                gameManager.GetComponent<GameManager>().DecreceEnemyCount();
             }
 
             // ノックバック処理
