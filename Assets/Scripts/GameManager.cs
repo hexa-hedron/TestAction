@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(var i = enemyCount; i <= MAX_ENEMY; i++)
+        for(var i = enemyCount + 1; i <= MAX_ENEMY; i++)
         {
             CreateEnemy();
             enemyCount = i;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     {
         if (enemyCount < MAX_ENEMY)
         {
-            for (var i = enemyCount; i <= MAX_ENEMY; i++)
+            for (var i = enemyCount + 1; i <= MAX_ENEMY; i++)
             {
                 CreateEnemy();
                 enemyCount = i;
@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour
     {
         var rand = Random.value;
         var enemy = rand > 0.5f ? Instantiate(EnemyH) : Instantiate(EnemyL);
+        var enemyManager = enemy.GetComponent<EnemyManager>();
+        enemyManager.player = Player;
+        enemyManager.gameManager = this.gameObject;
         enemy.transform.localPosition = new Vector3(
             Random.Range(-1.0f,1.0f),
             -2.0f
